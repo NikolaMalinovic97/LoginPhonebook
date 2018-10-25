@@ -8,8 +8,8 @@ public class ConnectionManager {
 
 private static ConnectionManager instance = null;
 	
-	private static final String USERNAME = ""; //Add your username for MySQL connection
-	private static final String PASSWORD = ""; //Add your password for MySQL connection
+	private static final String USERNAME = "root"; //Add your username for MySQL connection
+	private static final String PASSWORD = "sifran97"; //Add your password for MySQL connection
 	private static final String CONN_STRING = "jdbc:mysql://localhost/simplelogin?useSSL=false&serverTimezone=UTC";
 	
 	private Connection connection = null;
