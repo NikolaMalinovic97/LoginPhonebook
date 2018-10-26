@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS `contact`;
 CREATE TABLE `contact` (
   `contactID` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
-  `contactName` varchar(80) NOT NULL,
+  `contactName` varchar(40) NOT NULL,
+  `contactSurname` varchar(40) NOT NULL,
   `contactPhone` varchar(20) NOT NULL,
   PRIMARY KEY (`contactID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -77,4 +78,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-25 17:59:10
+-- Dump completed on 2018-10-26  9:31:25
