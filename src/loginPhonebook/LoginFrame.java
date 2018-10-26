@@ -1,5 +1,8 @@
 package loginPhonebook;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,7 +44,13 @@ public class LoginFrame extends JFrame {
 		jbRegister.setBounds(490, 30, 90, 20);
 		jbLogin.setBounds(260, 260, 80, 30);
 		
-		
+		//ActionListener for button REGISTER
+		jbRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new RegisterFrame();
+			}
+		});
 		
 	}
 }
