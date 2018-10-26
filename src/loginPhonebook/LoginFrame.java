@@ -2,10 +2,12 @@ package loginPhonebook;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -49,6 +51,39 @@ public class LoginFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				new RegisterFrame();
+			}
+		});
+		
+		//ActionListener for button LOGIN
+		jbLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String inputUsername = jtfUsername.getText();
+				String inputPassword = String.valueOf(jpfPassword.getPassword());
+				
+				User user = null;
+				try {
+					user = Main.getDAO().getUser(inputUsername);
+					if(user == null) {
+						JOptionPane.showMessageDialog(null,
+								"This username doesn't exist! Check your input.",
+							    "Warning",
+							    JOptionPane.WARNING_MESSAGE);
+					} else if(! inputPassword.equals(user.getPassword())) {
+						JOptionPane.showMessageDialog(null,
+								"Your password is incorrect.",
+							    "Warning",
+							    JOptionPane.WARNING_MESSAGE);
+					} else {
+						dispose();
+						new PhonebookFrame();
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+						    "Oops! Something went wrong.",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		

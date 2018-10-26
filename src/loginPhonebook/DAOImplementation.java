@@ -49,7 +49,8 @@ public class DAOImplementation implements UserDAOInterface {
 								rs.getString("dob"),
 								rs.getString("email"), 
 								rs.getString("phone"));
-			}
+			} else
+				return null;
 		}
 		
 		return user;
