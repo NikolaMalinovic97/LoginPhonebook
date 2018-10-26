@@ -10,7 +10,7 @@ private static ConnectionManager instance = null;
 	
 	private static final String USERNAME = "root"; //Add your username for MySQL connection
 	private static final String PASSWORD = "sifran97"; //Add your password for MySQL connection
-	private static final String CONN_STRING = "jdbc:mysql://localhost/simplelogin?useSSL=false&serverTimezone=UTC";
+	private static final String CONN_STRING = "jdbc:mysql://localhost/loginphonebook?useSSL=false&serverTimezone=UTC";
 	
 	private Connection connection = null;
 	
@@ -38,7 +38,6 @@ private static ConnectionManager instance = null;
 	public Connection getConenction() {
 		if(connection == null) {
 			if(openConnection()) {
-				System.out.println("Konekcija otvorena!");
 				return connection;
 			} else {
 				return null;
@@ -48,7 +47,6 @@ private static ConnectionManager instance = null;
 	}
 	
 	public void close() {
-		System.out.println("Konekcija zatvorena!");
 		try {
 			connection.close();
 			connection = null;

@@ -2,12 +2,15 @@ package loginPhonebook;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -124,8 +127,75 @@ public class RegisterFrame extends JFrame {
 			}
 		});
 		
+		//ActionListener for jbDone - cheks if all fields are entered correct
+		//and adds new user to database if everything is correct (registration)
+		jbDone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String password = String.valueOf(jpfPassword.getPassword());
+				String repeatPassword = String.valueOf(jpfRepeatPassword.getPassword());
+				String username = jtfUsername.getText();
+				String name = jtfName.getText();
+				if(name.length() == 0) {
+					name = null;
+				}
+				String surname = jtfSurname.getText();
+				if(surname.length() == 0) {
+					surname = null;
+				}
+				String dob = null;
+				if(jcbDay.getSelectedItem() != null) {
+					dob = "" + jcbYear.getSelectedItem() + "-"
+							+ jcbMonth.getSelectedItem() + "-"
+							+ jcbDay.getSelectedItem();
+				}
+				String email = jtfEmail.getText();
+				if(email.length() == 0) {
+					email = null;
+				}
+				String phone = jtfPhone.getText();
+				if(phone.length() == 0) {
+					phone = null;
+				}
+				
+				//Creating User out of entered text fields
+				User user = new User(username, password, name, surname, dob, email, phone);
+				if(! isUsernameCorrect(username)) {
+					displayWarning("Username is incorrect!\nIt must have atleast 6 characters and less than 21.");
+				} else if(! isUsernameUnique(username)) {
+					displayWarning("Username already taken!");
+				} else if(! isPasswordCorrect(password, repeatPassword)) {
+					displayWarning("Password is incorrect or you didn't repeat the same password!");
+				} else if(! isNameCorrect(name)) {
+					displayWarning("Name is incorrect!");
+				} else if(! isNameCorrect(surname)) {
+					displayWarning("Surname is incorrect!");
+				} else if(! isEmailCorrect(email)) {
+					displayWarning("Email is incorrect!");
+				} else if(! isPhoneCorrect(phone)) {
+					displayWarning("Phone number is incorrect!\nIt can contain only out of '+', '-', 0-9.");
+				} else {
+					try {
+						Main.getDAO().addUser(user);
+						JOptionPane.showMessageDialog(null,
+							    "Registration was succesful.");
+						jtfUsername.setText("");
+						jpfPassword.setText("");
+						jpfRepeatPassword.setText("");
+						jtfName.setText("");
+						jtfSurname.setText("");
+						jtfEmail.setText("");
+						jtfPhone.setText("");
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+						displayWarning("Ooops! Something went wrong.");
+					}
+				}
+			}
+		});
+		
 	}
 
+	//Method for adding years into jcbYear ComboBox
 	private void addYears(JComboBox<Integer> jcbYear) {
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		for (int i = currentYear; i >= 1900; i--) {
@@ -133,12 +203,14 @@ public class RegisterFrame extends JFrame {
 		}
 	}
 	
+	//Method for adding months into jcbMonth ComboBox
 	private void addMonths(JComboBox<Integer> jcbMonth) {
 		for (int i = 1; i < 13; i++) {
 			jcbMonth.addItem(i);
 		}
 	}
 	
+	//Method for adding days into jcbDay ComboBox
 	private void addDays(JComboBox<Integer> jcbYear, JComboBox<Integer> jcbMonth, JComboBox<Integer> jcbDay) {
 		int year = (int) jcbYear.getSelectedItem();
 		int month = (int) jcbMonth.getSelectedItem();
@@ -167,5 +239,99 @@ public class RegisterFrame extends JFrame {
 		for (int i = maxDays; i > 0; i--) {
 			jcbDay.addItem(i);
 		}
+	}
+	
+	//Method for displaying warning with specific message
+	private void displayWarning(String message) {
+		JOptionPane.showMessageDialog(null,
+			    message,
+			    "Warning",
+			    JOptionPane.WARNING_MESSAGE);
+	}
+	
+	//This method checks if username is entered correct
+	private boolean isUsernameCorrect(String username) {
+		if(username.length() < 6 || username.length() > 20) {
+			return false;
+		}
+		return true;
+	}
+	
+	//This method checks if username has not been taken already,
+	//in other words, it checks if database contains no such username as one which is entered
+	private boolean isUsernameUnique(String username) {
+		
+		ArrayList<User> users = null;
+		
+		try {
+			users = Main.getDAO().getUsers();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			displayWarning("Oops! Something went wrong.");
+		}
+		
+		for (User user : users) {
+			if(username.equals(user.getUsername())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	//This method checks if password is entered correct
+	private boolean isPasswordCorrect(String p1, String p2) {
+		if(! p1.equals(p2)) {
+			return false;
+		}
+		if(p1.length() < 6 || p1.length() > 20) {
+			return false;
+		}
+		return true;
+	}
+	
+	//This method checks if name or surname are entered correct
+	private boolean isNameCorrect(String name) {
+		if(name == null) {
+			return true;
+		}
+		if(name.length() > 40) {
+			return false;
+		}
+		return true;	
+	}
+	
+	//This method checks if email is entered correct
+	private boolean isEmailCorrect(String email) {
+		if(email == null) {
+			return true;
+		}
+		if(email.length() > 254) {
+			return false;
+		}
+		for (int i = 0; i < email.length(); i++) {
+			if(email.charAt(i) == '@') {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//This method checks if phone number is entered correct
+	private boolean isPhoneCorrect(String phone) {
+		if(phone == null) {
+			return true;
+		}
+		boolean correct = true;
+		char c;
+		for (int i = 0; i < phone.length(); i++) {
+			c = phone.charAt(i);
+			if(! (c == '+' || c == '-' || c== '0' || c== '1' || c== '2' || c== '3' || c== '4'
+									|| c== '5' || c== '6' || c== '7' || c== '8' || c== '9'))  {
+				correct = false;
+				break;
+			}
+		}
+		return correct;
 	}
 }
