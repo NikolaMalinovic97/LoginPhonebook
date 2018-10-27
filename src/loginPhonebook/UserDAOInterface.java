@@ -14,6 +14,6 @@ public interface UserDAOInterface {
 	//Method to update a specific user
 	public void updateUser(User oldUser, User newUser) throws SQLException;
 	
-	//Method top add a user
+	//Method to add a user
 	public void addUser(User user) throws SQLException;
 }
