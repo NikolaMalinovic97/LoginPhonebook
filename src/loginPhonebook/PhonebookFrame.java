@@ -1,5 +1,6 @@
 package loginPhonebook;
 
+import java.sql.SQLException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -63,5 +64,13 @@ public class PhonebookFrame extends JFrame {
 		jbLogOut.setBounds(560, 20, 210, 20);
 		jbChangeAccountInformation.setBounds(560, 45, 210, 45);
 		jlContactList.setBounds(20, 100, 760, 460);
+		
+		Contact c2 = new Contact(logedUser.getUsername(), "Stevan", "Stevanovic", "065382888");
+		try {
+			Main.getDAO().deleteContact(c2);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

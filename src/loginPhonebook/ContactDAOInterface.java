@@ -12,14 +12,14 @@ public interface ContactDAOInterface {
 	public ArrayList<Contact> getContactsByName(User user, String name) throws SQLException;
 	
 	//Method to get contacts by surname
-	public ArrayList<Contact> getAllContactsBySurname(User user, String surname) throws SQLException;
+	public ArrayList<Contact> getContactsBySurname(User user, String surname) throws SQLException;
 	
 	//Method to add a contact
-	public void addContact(User user) throws SQLException;
+	public void addContact(Contact contact) throws SQLException;
 		
 	//Method to update a specific contact
-	public void updateContact(User user, Contact contact) throws SQLException;
+	public void updateContact(Contact oldContact, Contact newContact) throws SQLException;
 	
 	//Method to delete a contact
-	public void deleteContact(User user, Contact contact) throws SQLException;
+	public void deleteContact(Contact contact) throws SQLException;
 }
