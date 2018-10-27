@@ -75,7 +75,7 @@ public class LoginFrame extends JFrame {
 							    JOptionPane.WARNING_MESSAGE);
 					} else {
 						dispose();
-						new PhonebookFrame();
+						new PhonebookFrame(user);
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
