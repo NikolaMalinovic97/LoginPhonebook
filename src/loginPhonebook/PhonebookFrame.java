@@ -1,10 +1,16 @@
 package loginPhonebook;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class PhonebookFrame extends JFrame {
@@ -17,11 +23,14 @@ public class PhonebookFrame extends JFrame {
 		
 		super("Phonebook");
 		
+		DefaultListModel<String> dlm = new DefaultListModel<String>();
+		
 		this.logedUser = logedUser;
 		
 		setResizable(false);
 		getContentPane().setLayout(null);
 		setBounds(200, 200, 800, 600);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -37,7 +46,7 @@ public class PhonebookFrame extends JFrame {
 		JTextField jtfSearch = new JTextField();
 		JButton jbChangeAccountInformation = new JButton ("Change account informations");
 		JButton jbLogOut = new JButton ("LOG OUT");
-		JList<String> jlContactList = new JList<String>();
+		JList<String> jlContactList = new JList<String>(dlm);
 		
 		//Components adding and positioning
 		add(jbAddContact);
@@ -65,12 +74,108 @@ public class PhonebookFrame extends JFrame {
 		jbChangeAccountInformation.setBounds(560, 45, 210, 45);
 		jlContactList.setBounds(20, 100, 760, 460);
 		
-		Contact c2 = new Contact(logedUser.getUsername(), "Stevan", "Stevanovic", "065382888");
+		//Load all contacts
+		ArrayList<Contact> allContacts = null;
 		try {
-			Main.getDAO().deleteContact(c2);
+			allContacts = Main.getDAO().getAllContactsForUser(logedUser);
+			String str;
+			for (Contact c: allContacts) {
+				str = "";
+				str += "NAME: " + c.getContactName();
+				str += " | SURNAME: " + c.getContactSurname();
+				str += " | PHONE: " + c.getContactPhone();
+				dlm.addElement(str);
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Oops! Somethin went wrong.",
+				    "Warning",
+				    JOptionPane.WARNING_MESSAGE);
 		}
+		
+		//ActionListener for Add Contact button 
+		jbAddContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new AddContactFrame(logedUser);
+			}
+		});
+		
+		//ActionListener for JButton NAME - gets all contacts which have the same name as input in jtfSearc
+		jbName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = jtfSearch.getText();
+				dlm.clear();
+				ArrayList<Contact> contacts = null;
+				String str;
+				try {
+					contacts = Main.getDAO().getContactsByName(logedUser, name);
+					for (Contact c : contacts) {
+						str = "";
+						str += "NAME: " + c.getContactName();
+						str += " | SURNAME: " + c.getContactSurname();
+						str += " | PHONE: " + c.getContactPhone();
+						dlm.addElement(str);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Oops! Somethin went wrong.",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		
+		//ActionListener for JButton SURNAME - gets all contacts which have the same surname as input in jtfSearc
+		jbSurname.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String surname = jtfSearch.getText();
+				dlm.clear();
+				ArrayList<Contact> contacts = null;
+				String str;
+				try {
+					contacts = Main.getDAO().getContactsBySurname(logedUser, surname);
+					for (Contact c : contacts) {
+						str = "";
+						str += "NAME: " + c.getContactName();
+						str += " | SURNAME: " + c.getContactSurname();
+						str += " | PHONE: " + c.getContactPhone();
+						dlm.addElement(str);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Oops! Somethin went wrong.",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		
+		//ActionListener for CLEAR
+		jbClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dlm.clear();
+				ArrayList<Contact> allContacts = null;
+				try {
+					allContacts = Main.getDAO().getAllContactsForUser(logedUser);
+					String str;
+					for (Contact c: allContacts) {
+						str = "";
+						str += "NAME: " + c.getContactName();
+						str += " | SURNAME: " + c.getContactSurname();
+						str += " | PHONE: " + c.getContactPhone();
+						dlm.addElement(str);
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null,
+							"Oops! Somethin went wrong.",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
 	}
 }

@@ -24,6 +24,7 @@ public class RegisterFrame extends JFrame {
 		setResizable(false);
 		getContentPane().setLayout(null);
 		setBounds(200, 200, 500, 420);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

@@ -20,7 +20,8 @@ public class LoginFrame extends JFrame {
 		super("Login - Phonebook");
 		setResizable(false);
 		getContentPane().setLayout(null);
-		setBounds(200, 200, 600, 360);
+		setBounds(1, 1, 600, 360);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
