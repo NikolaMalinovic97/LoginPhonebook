@@ -101,6 +101,24 @@ public class PhonebookFrame extends JFrame {
 			}
 		});
 		
+		//ActionListener for Delete Contact button
+		jbDeleteContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String str = jlContactList.getSelectedValue();
+				String username = logedUser.getUsername();
+				String contactName = trimContactName(str);
+				String contactSurname = trimContactSurname(str);
+				String contactPhone = trimContactPhone(str);
+				try {
+					Main.getDAO().deleteContact(new Contact(username, contactName, contactSurname, contactPhone));
+					JOptionPane.showMessageDialog(null,
+						    "Contact has been deleted succesfuly. Click on CLEAR to see changes");
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		//ActionListener for JButton NAME - gets all contacts which have the same name as input in jtfSearc
 		jbName.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,5 +195,58 @@ public class PhonebookFrame extends JFrame {
 				}
 			}
 		});
+	}
+	
+	//Method to get contact name out of selected list item
+	private String trimContactName(String str) {
+		String resultString = "";
+		
+		for (int i = 6; i < str.length(); i++) {
+			if(str.charAt(i) == ' ') {
+				break;
+			} else {
+				resultString += str.charAt(i);
+			}
+		}
+		
+		return resultString;
+	}
+	
+	//Method to get contact surname out of selected list item
+	private String trimContactSurname(String str) {
+		String resultString = "";
+		int whitespaceCounter = 0;
+		
+		for (int i = 6; i < str.length(); i++) {
+			if(str.charAt(i) == ' ') {
+				whitespaceCounter++;
+				if(whitespaceCounter == 4) {
+					break;
+				}
+			} else if(whitespaceCounter == 3) {
+				resultString += str.charAt(i);
+			}
+		}
+		
+		return resultString;
+	}
+	
+	//Method to get contacts phone number out of selected list item
+	private String trimContactPhone(String str) {
+		String resultString = "";
+		int whitespaceCounter = 0;
+		
+		for (int i = 6; i < str.length(); i++) {
+			if(str.charAt(i) == ' ') {
+				whitespaceCounter++;
+				if(whitespaceCounter == 7) {
+					break;
+				}
+			} else if(whitespaceCounter == 6) {
+				resultString += str.charAt(i);
+			}
+		}
+		
+		return resultString;
 	}
 }
