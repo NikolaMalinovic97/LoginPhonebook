@@ -59,7 +59,7 @@ public class DAOImplementation implements UserDAOInterface, ContactDAOInterface 
 	@Override
 	public void updateUser(User oldUser, User newUser) throws SQLException {
 		if(oldUser != null) {
-			String querry = "UPDATE user SET name = ?, surname = ?, dob = ?, email = ?, phone = ?"
+			String querry = "UPDATE user SET name = ?, surname = ?, dob = ?, email = ?, phone = ? "
 					+ "WHERE username = ?";
 			
 			try (PreparedStatement statement = connection.prepareStatement(querry); ) {
@@ -70,7 +70,7 @@ public class DAOImplementation implements UserDAOInterface, ContactDAOInterface 
 				statement.setString(5, newUser.getPhone());
 				statement.setString(6, oldUser.getUsername());
 				
-				statement.executeQuery();
+				statement.executeUpdate();
 			}
 		}
 	}

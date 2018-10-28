@@ -221,6 +221,21 @@ public class PhonebookFrame extends JFrame {
 				}
 			}
 		});
+		
+		//ActionListener for Log Out button
+		jbLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new LoginFrame();
+			}
+		});
+		
+		//ActionListener for ChangeAccountInformation button
+		jbChangeAccountInformation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ChangeAccountInfo(logedUser);
+			}
+		});
 	}
 	
 	//Method to get contact name out of selected list item
