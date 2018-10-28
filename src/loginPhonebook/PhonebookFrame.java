@@ -101,20 +101,46 @@ public class PhonebookFrame extends JFrame {
 			}
 		});
 		
+		//ActionListener for Change Contact button
+		jbChangeContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String str = jlContactList.getSelectedValue();
+				if(str == null) {
+					JOptionPane.showMessageDialog(null,
+							"You have to select contact in the list!",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				} else {
+					String username = logedUser.getUsername();
+					String contactName = trimContactName(str);
+					String contactSurname = trimContactSurname(str);
+					String contactPhone = trimContactPhone(str);
+					new ChangeContactFrame(new Contact(username, contactName, contactSurname, contactPhone));
+				}
+			}
+		});
+		
 		//ActionListener for Delete Contact button
 		jbDeleteContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String str = jlContactList.getSelectedValue();
-				String username = logedUser.getUsername();
-				String contactName = trimContactName(str);
-				String contactSurname = trimContactSurname(str);
-				String contactPhone = trimContactPhone(str);
-				try {
-					Main.getDAO().deleteContact(new Contact(username, contactName, contactSurname, contactPhone));
+				if(str == null) {
 					JOptionPane.showMessageDialog(null,
-						    "Contact has been deleted succesfuly. Click on CLEAR to see changes");
-				} catch (SQLException e1) {
-					e1.printStackTrace();
+							"You have to select contact in the list!",
+						    "Warning",
+						    JOptionPane.WARNING_MESSAGE);
+				} else {
+					String username = logedUser.getUsername();
+					String contactName = trimContactName(str);
+					String contactSurname = trimContactSurname(str);
+					String contactPhone = trimContactPhone(str);
+					try {
+						Main.getDAO().deleteContact(new Contact(username, contactName, contactSurname, contactPhone));
+						JOptionPane.showMessageDialog(null,
+							    "Contact has been deleted succesfuly. Click on CLEAR to see changes");
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
